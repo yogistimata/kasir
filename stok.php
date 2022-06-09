@@ -1,5 +1,7 @@
 <?php
 require 'funcition.php';
+$barang= mysqli_query($koneksi, "SELECT * FROM produk");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +41,10 @@ require 'funcition.php';
                             <a class="nav-link" href="masuk.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
                                Barang masuk
+                            </a>
+                            <a class="nav-link" href="pelanggan.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
+                               kelola pelanggan
                             </a>
                             <a class="nav-link" href="logout.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
@@ -82,25 +88,25 @@ require 'funcition.php';
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Stok barang</h1>
+                        <h1 class="mt-4">Stok Barang</h1>
                         <ol class="breadcrumb mb-4">
                         </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">jumlah barang :</div>
-                                    <div class="container mt-3">
-  
-                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    Open modal
-                                    </button>
-                                    </div>
+                                    <div class="card-body">jumlah barang</div>
+                                </div>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                Tambah barang
+                                </button>
+                                <div class="container mt-3">
+                                
                                 </div>
                             </div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                DataTable Example
+                                Data stok
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -111,26 +117,83 @@ require 'funcition.php';
                                             <th>Deskripsi</th>
                                             <th>Harga</th>
                                             <th>Stok date</th>
+                                            <th>edit | delet</th>
                                         </tr>
                                     </thead>
-                                    
-                                    </tfoot>
+                                    <?php $i = 1; ?>
+                                    <?php foreach($barang as $br): ?>
                                     <tbody>
-                                    <?php
-                                    $i = 1;?>
-                                    <?php 
-                                    foreach($barang as $br):
-                                    ?>
-
                                         <tr>
-                                            <td><? $i; ?></td>
-                                            <td><? $br['nama_produk']; ?></td>
-                                            <td><? $br['deskripsi']; ?></td>
-                                            <td><? $br['harga']; ?></td>
-                                            <td><? $br['stok']; ?></td>
-                                           
+                                            <td><?= $i ?></td>
+                                            <td><?= $br ['nama_produk']; ?></td>
+                                            <td><?= $br ['deskripsi'];  ?></td>
+                                            <td>Rp<?=$br['harga'];?></td>
+                                            <td><?= $br ['stok']; ?></td>
+                                            <td>
+                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $brg['id_produk'];?>">
+                               edit
+                                </button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delet<?= $brg['id_produk'];?>">
+                               delet
+                                </button>
+                                            </td>
                                         </tr>
-                                      <?php $i++; ?>
+<div class="modal" id="#edit<?= $brg['id_produk'];?>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+    <from method="POST">
+      <!-- Modal body -->
+      <div class="modal-body">
+        <input class="form-control mt-3" type="text" name="mana_produk" placeholder="nama produk">
+        <input class="form-control mt-3" type="text" name="deskripsi" placeholder="deskripsi">
+        <input class="form-control mt-3" type="num" name="harga"  placeholder="harga">
+        <input class="form-control mt-3" type="num" name="stok" placeholder="stok">
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" name="tambahproduk">Simpan</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+      </div>
+      </from>
+    </div>
+  </div>
+</div>
+<div class="modal" id="#edit<?= $brg['id_produk'];?>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">hapus barang<? $nama_produk; ?></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+    <from method="POST">
+      <!-- Modal body -->
+      <div class="modal-body">
+        <input class="form-control mt-3" type="text" name="mana_produk" placeholder="nama produk">
+        <input class="form-control mt-3" type="text" name="deskripsi" placeholder="deskripsi">
+        <input class="form-control mt-3" type="num" name="harga"  placeholder="harga">
+        <input class="form-control mt-3" type="num" name="stok" placeholder="stok">
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" name="hapusproduk">hapus</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
+      </div>
+      </from>
+    </div>
+  </div>
+</div>
+
+                                      <?php $i++ ?>
                                       <?php endforeach; ?>
                                     </tbody>
                                 </table>
@@ -155,7 +218,7 @@ require 'funcition.php';
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
-    <div class="modal" id="myModal">
+ <div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -164,21 +227,21 @@ require 'funcition.php';
         <h4 class="modal-title">Modal Heading</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-    <form method="POST">
+    <from method="POST">
       <!-- Modal body -->
       <div class="modal-body">
-        <input type="text" name="nama_produk" class="form-control mt-2" placeholder="nama produk">
-        <input type="text" name="deskripsi" class="form-control mt-2" placeholder="deskripsi produk">
-        <input type="num" name="harga" class="form-control mt-2" placeholder="harga">
-        <input type="num" name="stok" class="form-control mt-2" placeholder="stok">
+        <input class="form-control mt-3" type="text" name="mana_produk" placeholder="nama produk">
+        <input class="form-control mt-3" type="text" name="deskripsi" placeholder="deskripsi">
+        <input class="form-control mt-3" type="num" name="harga"  placeholder="harga">
+        <input class="form-control mt-3" type="num" name="stok" placeholder="stok">
       </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-      <button type="submit" class="btn btn-success" name="tambahproduk">OK</button>
+        <button type="submit" class="btn btn-success" name="tambahproduk">Simpan</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
       </div>
-      </form>
+      </from>
     </div>
   </div>
 </div>
