@@ -1,5 +1,17 @@
 <?php
 require 'funcition.php';
+
+
+if (isset($_GET['idp'])){
+    $idp = $_GET['idp']
+
+    $ambilmanapelanggan
+    $np = mysqli_fetch_arry($ambilmanapelanggan);
+    $namapel = $np['nama_pelanggan'];
+    $idp =$np['id_pelanggan'];
+}else { header ('location:index.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +51,10 @@ require 'funcition.php';
                             <a class="nav-link" href="masuk.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
                                Barang masuk
+                            </a>
+                            <a class="nav-link" href="pelanggan.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
+                               kelola pelanggan
                             </a>
                             <a class="nav-link" href="logout.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
@@ -82,57 +98,93 @@ require 'funcition.php';
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Stok barang</h1>
+                        <h1 class="mt-4">data pesanan : <? $idp; ?></h1>
                         <ol class="breadcrumb mb-4">
                         </ol>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">jumlah barang :</div>
-                                    <div class="container mt-3">
-  
-                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    Open modal
-                                    </button>
-                                    </div>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                tambah pesanan
+                                </button>
+                                <div class="container mt-3">
+                                
                                 </div>
                             </div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                DataTable Example
+                                Data stok
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama produk</th>
-                                            <th>Deskripsi</th>
-                                            <th>Harga</th>
-                                            <th>Stok date</th>
+                                            <th>nama produk</th>
+                                            <th>harga satuan</th>
+                                            <th>jumlah</th>
+                                            <th>sub-toltal</th>
+                                            <th>aksi</th>
                                         </tr>
                                     </thead>
-                                    
-                                    </tfoot>
+                                   
                                     <tbody>
-                                    <?php
-                                    $i = 1;?>
-                                    <?php 
-                                    foreach($barang as $br):
-                                    ?>
-
                                         <tr>
-                                            <td><? $i; ?></td>
-                                            <td><? $br['nama_produk']; ?></td>
-                                            <td><? $br['deskripsi']; ?></td>
-                                            <td><? $br['harga']; ?></td>
-                                            <td><? $br['stok']; ?></td>
-                                           
+                                        <?php
+                                        $get= mysqli_query($koneksi,
+                                        "SELECT * FROM detail_pesanan p, produk pr WHERE p.id_produk=pr.id_produk AND id_pesanan='$idp'AND id_pelanggan");
+                                        $i=1;
+                                        while($ps = mysqli_fetch_arry($get))
+                                        $idp = $ps['id_produk'];
+                                        $iddetail = $ps['id_detailpesanan'];
+                                        $idp = $ps['id_pesanan'];
+                                        $qty = $ps['qty'];
+                                        $harga = $ps['harga'];
+                                        $namaproduk = $ps['nama_produk'];
+                                        $deskripsi = $ps['deskripsi'];
+                                        $subtotal = $qty*$harga;
+                                            ?> 
+                                            <td><?= $i++?></td>
+                                            <td><?= $nama_produk;?>(<? $deskipsi;?>)</td>
+                                            <td><?= $harga;?></td>
+                                            <td><?= $qty;?></td>
+                                            <td><?= $subtotal;?></td>
+                                            <td>edit <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delet<?= $idpr;?>">
+                                            delet
+                                </button></td>
+                                        
                                         </tr>
-                                      <?php $i++; ?>
-                                      <?php endforeach; ?>
-                                    </tbody>
+                                      <?php 
+                                      };
+                                      ?>
+                                    <div class="modal" id="#delet<?= $idpr;?>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">hapus data pesanan</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+    <from method="POST">
+      <!-- Modal body -->
+    <div class="modal-body" class="form-control">
+          hapus barang
+        <input class="form-control mt-3" type="hidden" name="idp" velue="<?= $ps['id_produk']; ?>"
+        <input class="form-control mt-3" type="text" name="idpr" velue="<?= $ps['id_detailpesanan']; ?>"
+        <input class="form-control mt-3" type="text" name="iddetail" velue="<?=$ps['id_pesanan']; ?>"
+        <input class="form-control mt-3" type="num" name="iddetail" velue="<?= $ps['harga']; ?>"
+        <input class="form-control mt-3" type="text" name="iddetail" velue="<?=$ps['setok']; ?>
+    </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" name="edit">hapus</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+      </div>
+      </from>
+    </div>
+  </div>
+</div>
+</tbody>
                                 </table>
                             </div>
                         </div>
@@ -155,7 +207,7 @@ require 'funcition.php';
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
-    <div class="modal" id="myModal">
+<div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -164,21 +216,36 @@ require 'funcition.php';
         <h4 class="modal-title">Modal Heading</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-    <form method="POST">
+    <from method="POST">
       <!-- Modal body -->
-      <div class="modal-body">
-        <input type="text" name="nama_produk" class="form-control mt-2" placeholder="nama produk">
-        <input type="text" name="deskripsi" class="form-control mt-2" placeholder="deskripsi produk">
-        <input type="num" name="harga" class="form-control mt-2" placeholder="harga">
-        <input type="num" name="stok" class="form-control mt-2" placeholder="stok">
+      <div class="modal-body" class="form-control">
+          pilih barang
+          <select name="id_prduk">
+          <?php
+          $getproduk = mysqli_query($koneksi, "SELECT * FROM produk");
+
+          while($pl=mysqli_fetch_arry($getproduk)){
+              $id_produk = $pl['id_produk'];
+              $nama_produk = $pl['nama_produk'];
+              $stok = $pl['stol'];
+              $deskipsi = $pl['deskripsi'];
+              ?>
+              <option value="<?= $id_produk;?>"><?= $nama_produk;?><?= $deskipsi?>
+            </option>
+              <?php
+          }         
+          ?>
+          </select>
+          <input class="form-control mt-3" type="number" name="qty" placeholder="quantity">
+          <input class="form-control mt-3" type="hidden" name="idp" velue="<?= $idp; ?>"
       </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-      <button type="submit" class="btn btn-success" name="tambahproduk">OK</button>
+        <button type="submit" class="btn btn-success" name="addproduk">Simpan</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
       </div>
-      </form>
+      </from>
     </div>
   </div>
 </div>
